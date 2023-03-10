@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .grid{
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-gap: 30px;
+            
+        }
+        .grid__itemImg{
+            background-position: center;
+            width: 100%;
+            border-radius: 10px 10px 0 0;
+        }
+       .grid__item{
+            background: rgb(180, 133, 4);
+            width: 100%;
+            border-radius: 10px;
+
+        }
+        .row{
+            padding: 10px;
+            color: #ffffff;
+        }
+      
+    </style>
+</head>
+<body>
+    <div class="grid">
+    </div>
+    <script>
+        let data;
+        let dataArray;
+        let grid = document.querySelector('.grid');
+        let el;
+        let counter = 0;
+
+        fetch('https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=1000&api_key=uD8Q4f28988hseXjy6wGS5ob2dCzRkWJ2aup8Zvq')
+        .then((response) => response.json())
+        .then((json) => (data = json))
+
+        setTimeout(function(){
+             dataArray = data.photos;
+            dataArray.forEach((el, i) => {
+                counter += 1;
+                
+                if(counter <= 25){
+                    i = i * 10;
+                console.log(dataArray[i]);
+                console.log(i);
+                    el = dataArray[i * 3];
+                    let html = `
+                <div class="grid__item">
+                    
+                    <div class="grid__itemImg" style="background: url(${el.img_src}); background-repeat: no-repeat; background-size: cover; height: 300px;"></div>
+                    <div class="grid__itemId row">ID: ${el.id}</div>
+                    <div class="grid__itemEarthDate row">Earth Date: ${el.earth_date}</div>
+                    <div class="grid__itemCameraName row">Camera name: ${el.camera.name}</div>
+                    <div class="grid__itemRoverName row">Rover name: ${el.rover.name}</div>
+                 
+                </div>`
+                grid.innerHTML += html;
+                }
+                 
+            })
+                
+      
+        }, 3000);
+
+    </script>
+</body>
+</html>
